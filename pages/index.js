@@ -1,12 +1,18 @@
 import {useState, useEffect} from "react";
 import {ethers} from "ethers";
 import atm_abi from "../artifacts/contracts/Assessment.sol/Assessment.json";
+import DepositModal from './components/DepositModal'
+import WithdrawModal from './components/WithdrawModal'
 
 export default function HomePage() {
   const [ethWallet, setEthWallet] = useState(undefined);
   const [account, setAccount] = useState(undefined);
   const [atm, setATM] = useState(undefined);
   const [balance, setBalance] = useState(undefined);
+  const [showDepositModal, setShowDepositModal] = useState(false);
+  const [showWithdrawModal, setShowWithdrawModal] = useState(false);
+ 
+  // const [showModal, setShowModal] = useState(false);
 
   const contractAddress = "0x5FbDB2315678afecb367f032d93F642f64180aa3";
   const atmABI = atm_abi.abi;
@@ -64,6 +70,8 @@ export default function HomePage() {
       let tx = await atm.deposit(1);
       await tx.wait()
       getBalance();
+      setShowDepositModal(true);
+      console.log("shown");
     }
   }
 
@@ -72,7 +80,16 @@ export default function HomePage() {
       let tx = await atm.withdraw(1);
       await tx.wait()
       getBalance();
+      setShowWithdrawModal(true);
     }
+  }
+
+  function handleState1(newValue) {
+    setShowDepositModal(false);
+  }
+
+  function handleState2(newValue) {
+    setShowWithdrawModal(false);
   }
 
   const initUser = () => {
@@ -96,6 +113,8 @@ export default function HomePage() {
         <p>Your Balance: {balance}</p>
         <button onClick={deposit}>Deposit 1 ETH</button>
         <button onClick={withdraw}>Withdraw 1 ETH</button>
+        {showDepositModal && <DepositModal change={handleState1} showDepositModal/>}
+        {showWithdrawModal && <WithdrawModal change={handleState2} showWithdrawModal/>}
       </div>
     )
   }
@@ -104,11 +123,19 @@ export default function HomePage() {
 
   return (
     <main className="container">
-      <header><h1>Welcome to the Metacrafters ATM!</h1></header>
+      <header><h1><b><i>Welcome to the Metacrafters ATM!</i></b></h1></header>
       {initUser()}
       <style jsx>{`
         .container {
           text-align: center
+          width: 500%;
+          height: 900px;
+          background-image: url(https://upload.wikimedia.org/wikipedia/commons/3/36/MetaMask_Fox.svg);
+          background-repeat: no-repeat, no-repeat, no-repeat;
+          background-position:
+            center;
+            
+        
         }
       `}
       </style>
