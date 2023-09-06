@@ -3,6 +3,7 @@ import {ethers} from "ethers";
 import atm_abi from "../artifacts/contracts/Assessment.sol/Assessment.json";
 import DepositModal from './components/DepositModal'
 import WithdrawModal from './components/WithdrawModal'
+import ownerModal from './components/ownerModal'
 
 export default function HomePage() {
   const [ethWallet, setEthWallet] = useState(undefined);
@@ -11,6 +12,8 @@ export default function HomePage() {
   const [balance, setBalance] = useState(undefined);
   const [showDepositModal, setShowDepositModal] = useState(false);
   const [showWithdrawModal, setShowWithdrawModal] = useState(false);
+  const [ownerModal, setOwnerModal] = useState(false);
+  const [ownerName, setwhoisOwner] = useState(undefined);
  
   // const [showModal, setShowModal] = useState(false);
 
@@ -84,12 +87,24 @@ export default function HomePage() {
     }
   }
 
+  const whoisOwner = async () => {
+    if (atm) {
+      const ownerName = await atm.whoisOwner();
+      setwhoisOwner(ownerName);
+      //setOwnerModal(true);
+    }
+  }
+
   function handleState1(newValue) {
     setShowDepositModal(false);
   }
 
   function handleState2(newValue) {
     setShowWithdrawModal(false);
+  }
+
+  function handleState3(newValue) {
+    setOwnerModal(false);
   }
 
   const initUser = () => {
@@ -111,10 +126,13 @@ export default function HomePage() {
       <div>
         <p>Your Account: {account}</p>
         <p>Your Balance: {balance}</p>
+        <p>Owner Name: {ownerName}</p>
         <button onClick={deposit}>Deposit 1 ETH</button>
         <button onClick={withdraw}>Withdraw 1 ETH</button>
+        <button onClick={whoisOwner}>who is Owner</button>
         {showDepositModal && <DepositModal change={handleState1} showDepositModal/>}
         {showWithdrawModal && <WithdrawModal change={handleState2} showWithdrawModal/>}
+        {/* {ownerModal && <ownerModal change={handleState3} ownerModal/>} */}
       </div>
     )
   }
