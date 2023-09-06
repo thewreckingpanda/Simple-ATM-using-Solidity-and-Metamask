@@ -57,4 +57,9 @@ contract Assessment {
         // emit the event
         emit Withdraw(_withdrawAmount);
     }
+
+    function whoisOwner () public pure returns (string memory) {
+        string memory name = "Rajat";
+        return name;
+    }
 }
